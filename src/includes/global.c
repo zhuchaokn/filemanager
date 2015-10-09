@@ -1,2 +1,2 @@
 #include "global.h"
-int ROLE_LIVIN=1;
+int ROLE_LIVING=1;

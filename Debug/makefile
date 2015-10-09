@@ -24,19 +24,19 @@ endif
 # Add inputs and outputs from these tool invocations to the build variables 
 
 # All Target
-all: fileShare
+all: dsfileshare
 
 # Tool invocations
-fileShare: $(OBJS) $(USER_OBJS)
+dsfileshare: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MacOS X C Linker'
-	gcc  -o "fileShare" $(OBJS) $(USER_OBJS) $(LIBS)
+	gcc  -o "dsfileshare" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) fileShare
+	-$(RM) $(OBJS)$(C_DEPS)$(EXECUTABLES) dsfileshare
 	-@echo ' '
 
 .PHONY: all clean dependents

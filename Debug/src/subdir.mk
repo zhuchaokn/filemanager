@@ -5,21 +5,30 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../src/client.c \
+../src/command.c \
 ../src/common.c \
 ../src/fileShare.c \
-../src/server.c 
+../src/select.c \
+../src/server.c \
+../src/utils.c 
 
 OBJS += \
 ./src/client.o \
+./src/command.o \
 ./src/common.o \
 ./src/fileShare.o \
-./src/server.o 
+./src/select.o \
+./src/server.o \
+./src/utils.o 
 
 C_DEPS += \
 ./src/client.d \
+./src/command.d \
 ./src/common.d \
 ./src/fileShare.d \
-./src/server.d 
+./src/select.d \
+./src/server.d \
+./src/utils.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

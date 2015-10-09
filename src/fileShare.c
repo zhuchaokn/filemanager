@@ -21,6 +21,6 @@ int main(int argc,char* args[])
 	char* role = args[1];
 	int port = atoi(args[2]);
 	Rolefp roleptr=choose_role(role);
-	Roleptr(port);
+	roleptr(port);
 	return EXIT_SUCCESS;
 }
