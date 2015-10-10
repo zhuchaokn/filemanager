@@ -1,4 +1,5 @@
 #include<stdio.h>
+#include<string.h>
 #include "global.h"
 #define ARG_NUM 3
 #ifndef COM_STR

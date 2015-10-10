@@ -1,5 +1,5 @@
 #include "includes/select.h"
-#define CLIENT_NUM 3
+
 int server_socket(int port){
 	int sock_fd,yes;
 	struct sockaddr_in server_addr;
@@ -28,4 +28,24 @@ fd_set preparefd(int serverfd)
 	FD_SET(STDIN_FILENO,&fdsets);
 	FD_SET(serverfd,&fdsets);
 	return fdsets;
+}
+Client accept_client(int serverfd){
+	 struct sockaddr_in client_address;
+	 Client ct;
+	 int len=sizeof(client_address);
+	 int socketfd=accept(serverfd,(struct sockaddr *)&client_address, &len);
+	 ct.fd=socketfd;
+	 return ct;
+}
+int deal_client(int fd){
+	printf("%d is ready\n",fd);
+	int nreads=0;
+	char buffer[1025];
+	nreads=read(fd,buffer,1024);
+	while(nreads){
+		buffer[nreads]=0;
+		printf("%s",buffer);
+		nreads=read(fd,buffer,1024);
+	}
+	printf("%d is done\n");
 }
