@@ -1,5 +1,6 @@
 #include "includes/select.h"
-
+#include "includes/datagram.h"
+#include "includes/fileopt.h"
 int server_socket(int port){
 	int sock_fd,yes;
 	struct sockaddr_in server_addr;
@@ -30,22 +31,30 @@ fd_set preparefd(int serverfd)
 	return fdsets;
 }
 Client accept_client(int serverfd){
-	 struct sockaddr_in client_address;
-	 Client ct;
-	 int len=sizeof(client_address);
-	 int socketfd=accept(serverfd,(struct sockaddr *)&client_address, &len);
-	 ct.fd=socketfd;
-	 return ct;
+	struct sockaddr_in client_address;
+	Client ct;
+	int len=sizeof(client_address);
+	int socketfd=accept(serverfd,(struct sockaddr *)&client_address, &len);
+	ct.fd=socketfd;
+	return ct;
 }
 int deal_client(int fd){
-	printf("%d is ready\n",fd);
 	int nreads=0;
-	char buffer[1025];
-	nreads=read(fd,buffer,1024);
-	while(nreads){
+	char buffer[500];
+	DGHead head;
+	//读取命令
+	nreads=read(fd,&head,sizeof(DGHead));
+	//读取文件名称
+	if(head.length>0)
+	{
+		nreads=read(fd,buffer,head.length);
 		buffer[nreads]=0;
-		printf("%s",buffer);
-		nreads=read(fd,buffer,1024);
 	}
-	printf("%d is done\n");
+	//其它peer向我put文件
+	if(Equal(head.cmd,"PUT"))
+	{
+		recivefile(buffer,fd);
+	}else if(Equal(head.cmd,"GET")){
+	}
+	return 0;
 }

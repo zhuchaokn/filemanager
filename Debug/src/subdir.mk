@@ -6,8 +6,8 @@
 C_SRCS += \
 ../src/client.c \
 ../src/command.c \
-../src/common.c \
 ../src/fileShare.c \
+../src/fileopt.c \
 ../src/select.c \
 ../src/server.c \
 ../src/utils.c 
@@ -15,8 +15,8 @@ C_SRCS += \
 OBJS += \
 ./src/client.o \
 ./src/command.o \
-./src/common.o \
 ./src/fileShare.o \
+./src/fileopt.o \
 ./src/select.o \
 ./src/server.o \
 ./src/utils.o 
@@ -24,8 +24,8 @@ OBJS += \
 C_DEPS += \
 ./src/client.d \
 ./src/command.d \
-./src/common.d \
 ./src/fileShare.d \
+./src/fileopt.d \
 ./src/select.d \
 ./src/server.d \
 ./src/utils.d 

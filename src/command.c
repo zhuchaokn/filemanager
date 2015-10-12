@@ -2,7 +2,7 @@
 #include "includes/utils.h"
 #define COM_NUM 2
 char buffer[400]={0};
-ComMapping mapping[]={
+FuncMapping mapping[COM_NUM]={
 		{"QUIT",quit},
 		{"HELP",help}
 };
@@ -13,13 +13,7 @@ void read_command(Command* com)
 }
 CommandFp dispatch(Command* com)
 {
-	for(int i=0;i<COM_NUM;i++)
-	{
-		if(!strcmp(com->com,mapping[i].com))
-		{
-			return mapping[i].funp;
-		}
-	}
+	CommandFp funcp=choose(com->com,mapping,COM_NUM);
 	return notfound;
 }
 void help(Command* com)

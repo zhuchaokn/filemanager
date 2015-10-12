@@ -1,6 +1,7 @@
 #include "mcro.h"
 #include "global.h"
 #include<string.h>
+#include "utils.h"
 #define CLIENT_NUM 3
 #ifndef CLIENT_STR
 #define CLIENT_STR
@@ -13,4 +14,3 @@ typedef struct{
 void server(int port);
 void client(int port);
 typedef void (*Rolefp)(int);
-Rolefp choose_role(char* role);
