@@ -48,7 +48,11 @@ void client(int port)
 			//有键盘输入了
 			read_command(&com);
 			CommandFp comfp=dispatch(&com);
-			comfp(&com);
+			if(comfp){
+				comfp(&com);
+			}else{
+				WARN("no match command found %s",com.com);
+			}
 		}else if(FD_ISSET(serverfd,&fdsets))
 		{
 			Client ct=accept_client(serverfd);//有其它perr来连我了

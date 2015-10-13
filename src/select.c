@@ -50,11 +50,11 @@ int deal_client(int fd){
 		nreads=read(fd,buffer,head.length);
 		buffer[nreads]=0;
 	}
-	//其它peer向我put文件
-	if(Equal(head.cmd,"PUT"))
-	{
-		recivefile(buffer,fd);
-	}else if(Equal(head.cmd,"GET")){
+	FileOptP func=chooseOpt(head.cmd);
+	if(!func){
+		fprintf(stderr,"Unrecognized option %s\n",head.cmd);
+	}else{
+		func(buffer,fd,head.length);
 	}
 	return 0;
 }

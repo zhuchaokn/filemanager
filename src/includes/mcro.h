@@ -5,3 +5,4 @@
 	perror(msg);\
 	exit(-1);\
 }
+#define WARN(msg,args...) fprintf(stderr,##args)
