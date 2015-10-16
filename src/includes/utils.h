@@ -1,4 +1,4 @@
-#include "command.h"
+#include "global.h"
 #ifndef FUNCMPPING
 #define FUNCMPPING
 typedef struct {
