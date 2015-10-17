@@ -1,4 +1,5 @@
 #include"mcro.h"
+#include <arpa/inet.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -7,7 +8,7 @@
 #include <sys/time.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
-#define PEER_LIMIT 100
+#define PEER_LIMIT 50
 extern int ROLE_LIVING;
 #ifndef PEER_STU
 #define PEER_STU
@@ -27,9 +28,11 @@ extern int GClientCounts;
 extern fd_set g_fdsets;
 #endif
 void addPeer(Peer peer);
+void showPeerList();
 void showClientList();
 Client* getClient(int id);
 void addClient(Client ct);
+void removeClientOfId(int id);
 #ifndef COM_STR
 #define COM_STR
 #define ARG_NUM 3

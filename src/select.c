@@ -39,14 +39,15 @@ Client accept_client(int serverfd) {
 	ct.fd = socketfd;
 	ct.peer.port = ntohs(client_address.sin_port);
 	char* ip = inet_ntoa(client_address.sin_addr);
-	strncpy(ct.peer.ip, ip, 20);
 	//host
-	printf("receive connection from %s\n",ip);
+	printf("receive connection from %s\n", ip);
+	strncpy(ct.peer.ip, ip, 20);
 	return ct;
 }
 int deal_client(int fd) {
 	int nreads = 0;
-	char buffer[500];
+	char buffer[1024];//此处的1000是有问题的
+	memset(buffer,0,1024);
 	DGHead head;
 	//读取命令
 	nreads = read(fd, &head, sizeof(DGHead));
@@ -64,24 +65,20 @@ int deal_client(int fd) {
 	return 0;
 }
 Client connectToIp(char* ip, int port) {
-	printf("connect to %s %d\n",ip,port);
 	int client_sockfd;
 	int len;
-	Client client={0};
+	Client client = { 0 };
 	struct sockaddr_in address; //服务器端网络地址结构体
 	int result;
 	client_sockfd = socket(AF_INET, SOCK_STREAM, 0); //建立客户端socket
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = inet_addr(ip);
-	address.sin_port = port;
+	address.sin_port = htons(port);
 	len = sizeof(address);
 	result = connect(client_sockfd, (struct sockaddr *) &address, len);
-	printf("connect to %d\n",result);
-	if (result == -1) {
-		return client;
-	}
-	client.fd=client_sockfd;
-	strncpy(client.peer.ip,ip,20);
-	client.peer.port=port;
+	client.fd = client_sockfd;
+	strncpy(client.peer.ip, ip, 20);
+	client.peer.port = port;
+	printf("creator connection with %s\n",ip);
 	return client;
 }

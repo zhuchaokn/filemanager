@@ -19,12 +19,6 @@ void register2server(Command* com) {
 	char * ip = com->args[0];
 	int port = atoi(com->args[1]);
 	Client client = connectToIp(ip, port);
-	//将本地端口号发送给服务器
-	write(client.fd, &port, sizeof(int));
-	char myIp[20];
-	read(client.fd, myIp, 20 * sizeof(char));
-	myself.port = port;
-	strncpy(myself.ip, myIp, 20);
 	addClient(client);
 	FD_SET(client.fd, &g_fdsets);
 }
@@ -50,13 +44,26 @@ void creator(Command* com)
 	puts("UBIT name: lingbing");
 	puts("UB address: lingbing@buffalo.edu");
 }
+void closeClient(int id){
+	   DGHead head={"CLOD",0};
+	   Client* cptr = getClient(id);
+	   int fd=cptr->fd;
+	   write(fd,&head,sizeof(DGHead));
+	   FD_CLR(fd,&g_fdsets);
+	   close(fd);
+	   removeClientOfId(id);
+}
 void quit(Command* com) {
+	for(int i=0;i<GClientCounts;i++)
+	{
+		closeClient(i);
+	}
 	ROLE_LIVING = 0;
 }
 void putfile(Command* com) {
 	int id = atoi(com->args[0]);
 	char* fileName = com->args[1];
-	Client* cptr = getClient(id);
+	Client* cptr = getClient(id-1);
 	if (!cptr) {
 		WARN("invalid connctiond id %d", 0);
 	}
@@ -70,9 +77,9 @@ void putfile(Command* com) {
 void getfile(Command* com) {
 	int id = atoi(com->args[0]);
 	char* fileName = com->args[1];
-	Client* cptr = getClient(id);
+	Client* cptr = getClient(id-1);
 	if (!cptr) {
-		WARN("invalid connctiond id %d", 0);
+		WARN("invalid connctiond id %d\n", 0);
 	}
 	int fd = cptr->fd;
 	int fileNameLen = strlen(com->args[1]);
@@ -89,14 +96,19 @@ void connectTo(Command* com) {
 	FD_SET(client.fd, &g_fdsets);
 }
 void list(Command* com) {
-	puts("list");
 	showClientList();
 }
 void terminate(Command* com) {
-
+   int id = atoi(com->args[0]);
+   id=id-1;
+   closeClient(id);
 }
 void syncfile(Command* com) {
 
+	DGHead syncHead={"sync",0};
+    for(int i=0;i<GClientCounts;i++){
+    	Client* cptr = getClient(i);
+    }
 }
 void display(Command* com) {
 	printf("ip:%s\t port:%d\n", myself.ip, myself.port);

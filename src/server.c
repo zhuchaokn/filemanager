@@ -2,12 +2,15 @@
 #include "includes/command.h"
 #include "includes/select.h"
 void notifyClients(){
-	DGHead head={"LIST",GClientCounts*sizeof(Peer)};
+	int length=GPeerCounts*sizeof(Peer);
+	char buffer[1000];
+	memcpy(buffer,gpeerList,length);
+	DGHead head={"LIST",length};
    for(int i=0;i<GClientCounts;i++)
    {
 	   Client* cptr=getClient(i);
-	   write(cptr->fd,&head,GPeerCounts*sizeof(Peer));
-	   write(cptr->fd,gpeerList,GPeerCounts*sizeof(Peer));
+	   int nwrites=write(cptr->fd,&head,sizeof(DGHead));
+	   write(cptr->fd,buffer,length);
    }
 }
 void server(int port) {
@@ -29,7 +32,17 @@ void server(int port) {
 			int port=0;
 			if (ctfd && FD_ISSET(ctfd, &fdsets)) {
 				//读取客户端发送过来的监听端口
-              read(ctfd,&port,sizeof(int));
+			 DGHead head;
+              read(ctfd,&head,sizeof(head));
+              if(Equal(head.cmd,"PORT")){
+            	  port=head.length;
+              }else if(Equal(head.cmd,"CLOD")){
+            	  FD_CLR(ctfd,&fdsets_template);
+            	  close(ctfd);
+            	  removeClientOfFd(ctfd);
+            	  removePeer(cptr->peer.ip);
+              }
+              write(ctfd,cptr->peer.ip,20);
               Peer peer=cptr->peer;
               peer.port=port;
               addPeer(peer);
@@ -41,6 +54,8 @@ void server(int port) {
 			clientCount++;
 			FD_SET(ct.fd, &fdsets_template);
 			addClient(ct);
+			DGHead head={"REG",0};
+			write(ct.fd,&head,sizeof(DGHead));
 		}
 	}
 }

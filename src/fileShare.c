@@ -22,6 +22,7 @@ int main(int argc,char* args[])
 	};
 	char* role = args[1];
 	int port = atoi(args[2]);
+	myself.port=port;
 	Rolefp roleptr=(Rolefp)choose(role,mapping,2);
 	if(roleptr){
 		roleptr(port);

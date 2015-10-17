@@ -1,51 +1,44 @@
 #include "includes/role.h"
 #include "includes/command.h"
-void init_command(Command* comp){
-	memset(comp->com,0,20);
-	for(int i=0;i<ARG_NUM;i++)
-	{
-		memset(comp->args[i],0,100);
+void init_command(Command* comp) {
+	memset(comp->com, 0, 20);
+	for (int i = 0; i < ARG_NUM; i++) {
+		memset(comp->args[i], 0, 100);
 	}
 }
-void client(int port)
-{
+void client(int port) {
 	Command com;
-	int results=0;
-	int serverfd=server_socket(port);
-	 g_fdsets=preparefd(serverfd);
+	int results = 0;
+	int serverfd = server_socket(port);
+	g_fdsets = preparefd(serverfd);
 	fd_set fdsets;
-	while(ROLE_LIVING)
-	{
+	while (ROLE_LIVING) {
 
-        memset(&com,0,sizeof(Command));
-		fdsets=g_fdsets;
-		results=select(FD_SETSIZE,&fdsets,NULL,NULL,NULL);
-		if(results<0)
-		{ 
-			ERROR(SELECT_ERROR); 
+		memset(&com, 0, sizeof(Command));
+		fdsets = g_fdsets;
+		results = select(FD_SETSIZE, &fdsets, NULL, NULL, NULL);
+		if (results < 0) {
+			ERROR(SELECT_ERROR);
 		}
-		for(int i=0;i<GClientCounts;i++){
-			Client* cptr=getClient(i);
-			int ctfd=cptr->fd;
-			if(ctfd&&FD_ISSET(ctfd,&fdsets))
-			{
+		for (int i = 0; i < GClientCounts; i++) {
+			Client* cptr = getClient(i);
+			int ctfd = cptr->fd;
+			if (ctfd && FD_ISSET(ctfd, &fdsets)) {
 				deal_client(ctfd);
 			}
 		}
-		if(FD_ISSET(STDIN_FILENO,&fdsets))
-		{
+		if (FD_ISSET(STDIN_FILENO, &fdsets)) {
 			//有键盘输入了
 			read_command(&com);
-			CommandFp comfp=dispatch(&com);
-			if(comfp){
+			CommandFp comfp = dispatch(&com);
+			if (comfp) {
 				comfp(&com);
-			}else{
-				WARN("no match command found %s\n",com.com);
+			} else {
+				WARN("no match command found %s\n", com.com);
 			}
-		}else if(FD_ISSET(serverfd,&fdsets))
-		{
-			Client ct=accept_client(serverfd);//有其它perr来连我了
-			FD_SET(ct.fd,&g_fdsets);
+		} else if (FD_ISSET(serverfd, &fdsets)) {
+			Client ct = accept_client(serverfd); //有其它perr来连我了
+			FD_SET(ct.fd, &g_fdsets);
 			addClient(ct);
 		}
 	}
