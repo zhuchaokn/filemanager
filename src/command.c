@@ -2,7 +2,7 @@
 #include "includes/fileopt.h"
 #include "includes/select.h"
 #include "includes/utils.h"
-#define COM_NUM 10
+#define COM_NUM 11
 char buffer[400] = { 0 };
 FuncMapping mapping[COM_NUM] = { { "QUIT", quit }, { "HELP", help }, {
 		"REGISTER", register2server }, { "CREATOR", creator }, { "GET", getfile }, { "PUT",

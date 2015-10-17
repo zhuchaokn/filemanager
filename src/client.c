@@ -11,13 +11,13 @@ void client(int port)
 {
 	Command com;
 	int results=0;
-	init_command(&com);
 	int serverfd=server_socket(port);
 	 g_fdsets=preparefd(serverfd);
 	fd_set fdsets;
 	while(ROLE_LIVING)
 	{
 
+        memset(&com,0,sizeof(Command));
 		fdsets=g_fdsets;
 		results=select(FD_SETSIZE,&fdsets,NULL,NULL,NULL);
 		if(results<0)
@@ -36,12 +36,11 @@ void client(int port)
 		{
 			//有键盘输入了
 			read_command(&com);
-			puts(com.com);
 			CommandFp comfp=dispatch(&com);
 			if(comfp){
 				comfp(&com);
 			}else{
-				WARN("no match command found %s",com.com);
+				WARN("no match command found %s\n",com.com);
 			}
 		}else if(FD_ISSET(serverfd,&fdsets))
 		{
